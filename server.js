@@ -1,6 +1,7 @@
-const express = require('express')
-const { connectMongodb } = require('./src/dbconfig/mongoose.config.js');
-const { routes } = require('./src/Routes/auth.routes.js');
+const express = require('express'),
+      { connectMongodb } = require('./src/dbconfig/mongoose.config.js'),
+      { routes } = require('./src/Routes/auth.routes.js'),
+      { privateRoutes } = require('./src/Routes/private.routes.js');
 
 const app = express()
 
@@ -12,6 +13,7 @@ connectMongodb()
 
 // Routes
 app.use(routes)
+app.use(privateRoutes)
 
 app.listen(3000, () => console.log('API started!'))
 
