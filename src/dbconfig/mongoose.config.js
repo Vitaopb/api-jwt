@@ -1,12 +1,7 @@
 const { connect } = require('mongoose');
-require('dotenv').config();
-
-const { DB_USER, DB_PASS } = process.env;
 
 const dbUser = 'root';
 const dbPassword = '1234';
-
-console.log(typeof dbUser, dbPassword);
 
 async function connectMongodb() {
   try {
