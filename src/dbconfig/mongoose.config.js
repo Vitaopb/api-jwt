@@ -1,11 +1,11 @@
 const { connect } = require('mongoose');
 
-const dbUser = 'root';
-const dbPassword = '1234';
+
+const { DB_USER, DB_PASS, DB_PORT } = process.env;
 
 async function connectMongodb() {
   try {
-    await connect(`mongodb://${dbUser}:${dbPassword}@localhost:27017`);
+    await connect(`mongodb://${DB_USER}:${DB_PASS}@localhost:${DB_PORT}`);
     console.log('MONGODB is connected');
   } catch (error) {
     console.log(`MONGODB fail connection, error: ${error}`);
