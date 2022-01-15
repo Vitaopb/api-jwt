@@ -6,8 +6,8 @@ const express = require('express'),
 
 const app = express()
 
-const { DB_USER, DB_PASS } = process.env;
-console.log(DB_USER, DB_PASS);
+const { SERVER_PORT } = process.env;
+
 
 // Config JSON response
 app.use(express.json());
@@ -19,7 +19,7 @@ connectMongodb()
 app.use(routes)
 app.use(privateRoutes)
 
-app.listen(3000, () => console.log('API started!'))
+app.listen(SERVER_PORT, () => console.log('API started!'))
 
 module.exports = app
  

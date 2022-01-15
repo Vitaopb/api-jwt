@@ -41,7 +41,7 @@ async function register(req, res) {
   try {
     await user.save();
 
-    const secret = process.env.SECRET_ENV;
+    const secret = process.env.SECRET_KEY;
     const token = jwt.sign({
         userId: user._id
       }, secret);
@@ -90,4 +90,4 @@ async function login(req, res) {
 
 }
 
-module.exports = { register, login, secret };
+module.exports = { register, login, secret: process.env.SECRET_KEY };

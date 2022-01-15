@@ -1,6 +1,6 @@
 FROM node
 
-USER node
+USER root
 WORKDIR /app
 
 # Instalar as dependencias
@@ -8,7 +8,7 @@ COPY package.json .
 
 RUN npm install 
 
-EXPOSE 3000
+EXPOSE ${SERVER_PORT}
 
 COPY . .
 

@@ -2,40 +2,35 @@ version: '3'
 
 services:
   nodejs:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    image: nodejs
+    build: .
     container_name: nodejs
     restart: unless-stopped
     ports:
-      - 3000:3000
+      - $SERVER_PORT:3000
     volumes:
-      - .:/home/node/app
-      - node_modules:/home/node/app/node_modules
-    networks:
-      - app_network
-
+      - ./app
+    depends_on:
+      - mongo
+    
     command: ./wait-for.sh db:27017 -- /home/node/app/node_modules/.bin/nodemon server.js
 
   mongo:
     image: mongo
     container_name: mongodb
-    restart: always
-    ports:
-      - 27017:27017
     restart: unless-stopped
+    ports:
+      - $DB_PORT:27017
     environment:
       MONGO_INITDB_DATABASE: api-jwt
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: 1234
+      MONGO_INITDB_ROOT_USERNAME: $DB_USER
+      MONGO_INITDB_ROOT_PASSWORD: $DB_PASS
     volumes:
-      - ./db:/data/db
+      - ./mongodb:/data/db
 
 networks:
   app_network:
-    driver: bridge
+    driver: local
 
 volumes:
-  dbdata:
+  mongodb:
   node_modules: 
