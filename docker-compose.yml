@@ -1,36 +1,47 @@
 version: '3'
 
 services:
-  nodejs:
-    build: .
-    container_name: nodejs
-    restart: unless-stopped
-    ports:
-      - $SERVER_PORT:3000
+  app:
+    build: ./app
+    container_name: node
+    entrypoint: dockerize -wait tcp://mongo:27017 -timeout 30s ./entrypoint.sh
     volumes:
-      - ./app
-    depends_on:
-      - mongo
-    
-    command: ./wait-for.sh db:27017 -- /home/node/app/node_modules/.bin/nodemon server.js
+     - "./app:/home/node/app"
+    networks:
+     - jwt
+    ports:
+     - "3000:3000"
 
   mongo:
     image: mongo
-    container_name: mongodb
+    container_name: mongo
     restart: unless-stopped
     ports:
-      - $DB_PORT:27017
+      - "27017:27017"
     environment:
       MONGO_INITDB_DATABASE: api-jwt
-      MONGO_INITDB_ROOT_USERNAME: $DB_USER
-      MONGO_INITDB_ROOT_PASSWORD: $DB_PASS
+      MONGO_INITDB_ROOT_USERNAME: vitaopb
+      MONGO_INITDB_ROOT_PASSWORD: 1234
     volumes:
       - ./mongodb:/data/db
+    networks:
+      - jwt
+
+  mongo-express:
+    image: mongo-express:0.54
+    container_name: mongo-express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_AUTH_DATABASE: api-jwt
+      ME_CONFIG_MONGODB_AUTH_USERNAME: vitaopb
+      ME_CONFIG_MONGODB_AUTH_PASSWORD: 1234
+    depends_on:
+      - mongo
+    networks:
+      - jwt    
 
 networks:
-  app_network:
-    driver: local
-
-volumes:
-  mongodb:
-  node_modules: 
+  jwt:
+    driver: bridge
